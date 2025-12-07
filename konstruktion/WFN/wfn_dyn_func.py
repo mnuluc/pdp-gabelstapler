@@ -1,13 +1,16 @@
 import math
 
+### Funktionen für dynamischen Wellenfestigkeitsnachweis
+
+
+## sicherheit
 def sicherheit(sig_zda, sig_zdak, sig_ba, sig_bak, tau_ta, tau_tak):
     zdb = sig_zda / sig_zdak + sig_ba / sig_bak
     t = tau_ta / tau_tak
     return 1 / math.sqrt(zdb**2 + t**2)
 
-# NENNSPANNUNGEN
-
-#Amplitude
+## BEANSPRUCHUNG
+#   Amplitude
 def sig_zda(f_zda, d):
     a = math.pi/4 * d * d
     return f_zda/a
@@ -20,7 +23,7 @@ def tau_ta(m_ta, d):
     wt = math.pi/16 * d * d * d
     return m_ta/wt
 
-#Mittelwert
+#   Mittelwert
 def sig_zdm(f_zdm, d):
     a = math.pi/4 * d * d
     return f_zdm/a
@@ -33,9 +36,9 @@ def tau_tm(m_tm, d):
     wt = math.pi/16 * d * d * d
     return m_tm/wt
 
-# BEANSPRUCHBARKEIT
 
-#Ausschlagfestigkeit
+## BEANSPRUCHBARKEIT
+#   Ausschlagfestigkeit
 def sig_zdak(sig_zdwk, psi_zdw, sig_vm):
     return sig_zdwk - psi_zdw * sig_vm
 
@@ -45,14 +48,14 @@ def sig_bak(sig_bwk, psi_bw, sig_vm):
 def tau_tak(tau_twk, psi_tw, tau_vm):
     return tau_twk - psi_tw * tau_vm
 
-#Vergleichsmittelspannung
+#   Vergleichsmittelspannung
 def sig_vm(sig_zdm, sig_bm, tau_m):
     return math.sqrt((sig_zdm + sig_bm)**2 + 3 * tau_m**2)
 
 def tau_vm(sig_vm):
     return sig_vm/math.sqrt(3)
 
-#Mittelspannungsempfindlichkiet
+#   Mittelspannungsempfindlichkiet
 def psi_zdw(sig_zdwk, k_t, r_m):
     return sig_zdwk / (2*k_t * r_m - sig_zdwk)
 
@@ -62,7 +65,7 @@ def psi_bw(sig_bwk, k_t, r_m):
 def psi_tw(tau_twk, k_t, r_m):
     return tau_twk / (2*k_t * r_m - tau_twk)
 
-#Wechselfestigkeit
+#   Wechselfestigkeit
 def sig_zdwk(sig_zdw, k_t, k_gzd):
     return sig_zdw * k_t / k_gzd
 
@@ -72,10 +75,8 @@ def sig_bwk(sig_bw, k_t, k_gb):
 def tau_twk(tau_tw, k_t, k_gt):
     return tau_tw * k_t / k_gt
 
-#GRÖßENEINFLUSSFAKTOREN
-
-#Gesamteinflussfaktoren
-
+# Einflussfaktoren
+#   Gesamteinflussfaktoren
 def k_gzd(bet_kzd, k_fs, k_v):
     return (bet_kzd + (1 / k_fs) - 1) / k_v
 
@@ -93,23 +94,22 @@ def k_g(bet_k, k_e, k_fs, k_v):
 
     return (k_zd, k_b, k_t)
 
-#Geometrischer Einflussfaktor
+#   Geometrischer Einflussfaktor
 def k_e(d_eff):
     if d_eff >= 0.150:
         return 0.8
     else:
         return 1 - 0.2 * (math.log(d_eff/0.0075)/math.log(20))
 
-#Oberflächeneinflussfaktoren
+#   Oberflächenrauheit Einflussfaktoren
 def k_fs(r_z, r_m, k_t):
     return 1 - 0.22 * math.log(r_z/1e-6) * (math.log(r_m * k_t / 20e6) -1)
 
 def k_ft(k_fs):
     return 0.575 * k_fs + 0.425
 
-#Kerbwirkungszahlen
-
-#Konstanten
+# Kerbwirkungszahlen
+#   Konstanten für Formzahl
 a_zd = 0.62
 b_zd = 3.5
 c_zd = 0
