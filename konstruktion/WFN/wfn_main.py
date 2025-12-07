@@ -8,31 +8,33 @@ import wfn_func as fd
 
 ## EINGABE PARAMETER
 f_zda = 14.1 # [N] Zug-/Druckkraft Amplitude
-f_zdm = 0 # [N] Zug-/Druckkraft Mittelwert
 m_ta = 1.84 # [Nm] Torsionsmoment Amplitude
-m_tm = 0 # [Nm] Torsionsmoment Mittelwert
 m_ba = 0.420 # [Nm] Biegemoment Amplitude
-m_bm = 0 # [Nm] Biegemoment Mittelwert
 
-f_zdmax = 100000 # [N] Zug-/Druckkraft Maximal
-m_tmax = 0.1 # [Nm] Torsionsmoment Maximal
-m_bmax = 0.1 # [Nm] Biegemoment Maximal
+f_zdm = 6.40 # [N] Zug-/Druckkraft Mittelwert
+m_tm = 0.837 # [Nm] Torsionsmoment Mittelwert
+m_bm = 0.142 # [Nm] Biegemoment Mittelwert
 
-d_k = 0.010 # [m] Kleiner Durchmesser Welle
-d_g = 0.015 # [m] Großer Druchmesser Welle
-r = 0.001 # [m] Radius Kerbe
+f_zdmax = 20.3 # [N] Zug-/Druckkraft Maximal
+m_tmax = 2.66 # [Nm] Torsionsmoment Maximal
+m_bmax = 0.606 # [Nm] Biegemoment Maximal
+
+d_k = 0.015 # [m] Kleiner Durchmesser Welle
+d_g = 0.020 # [m] Großer Druchmesser Welle
+r = 0.0004 # [m] Radius Kerbe
+
 vollwelle = True
 harte_randschicht = False
 
 k_t = 1 # [] Technologischer Größeneinflussfaktor
 k_v = 1 # [] Einflussfaktor Oberflächenverfestigung
 
-r_z = 3.2e-6 # [m] Oberflächenrauheit
+r_z = 12e-6 # [m] Oberflächenrauheit
 
 r_m = 750e6 # [Pa] Zugfestigkeit Wellenmaterial
 r_e = 520e6 # [Pa] Streckgrenze Wellenmaterial
 
-sicherheit_min_D = 2 # [] geforderte Sicherheitszahl gegen Dauerbruch
+sicherheit_min_D = 3 # [] geforderte Sicherheitszahl gegen Dauerbruch
 sicherheit_min_F = 2 # [] geforderte Sicherheitszahl gegen Fließen
 
 
@@ -117,4 +119,5 @@ print("Errechnete Beanspruchbarkeit:")
 print(f"    sig_zdFK: {sig_zdfk/1e6} N/mm²")
 print(f"    sig_bFK: {sig_bfk/1e6} N/mm²")
 print(f"    tau_tFK: {tau_tfk/1e6} N/mm²")
-print(f"Errechnete Sicherheit gegen Dauerbruch: {sicherheit_F}")
+print(f"Errechnete Sicherheit gegen Fließen: {sicherheit_F}")
+print()
