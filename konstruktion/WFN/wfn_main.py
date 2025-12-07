@@ -14,9 +14,9 @@ m_tm = 0 # [Nm] Torsionsmoment Mittelwert
 m_ba = 0.420 # [Nm] Biegemoment Amplitude
 m_bm = 0 # [Nm] Biegemoment Mittelwert
 
-f_zdmax = 0 # [N] Zug-/Druckkraft Maximal
-m_tmax = 0 # [Nm] Torsionsmoment Maximal
-m_bmax = 0 # [Nm] Biegemoment Maximal
+f_zdmax = 100000 # [N] Zug-/Druckkraft Maximal
+m_tmax = 0.1 # [Nm] Torsionsmoment Maximal
+m_bmax = 0.1 # [Nm] Biegemoment Maximal
 
 d_k = 0.010 # [m] Kleiner Durchmesser Welle
 d_g = 0.015 # [m] Großer Druchmesser Welle
@@ -84,7 +84,7 @@ tau_tfk = fd.tau_tfk(r_e, bet_k, k_Ft, k_t)
 
 # Sicherheit:
 sicherheit_D = fd.sicherheit_D(sig_zda,sig_zdak, sig_ba, sig_bak, tau_ta, tau_tak)
-sicherheit_F = fd.sicherheit_F(sig_zda, sig_zdfk, sig_ba, sig_bfk, tau_ta, tau_tfk)
+sicherheit_F = fd.sicherheit_F(sig_zdmax, sig_zdfk, sig_bmax, sig_bfk, tau_tmax, tau_tfk)
 
 # Festigkeitsnachweis:
 nachweis_D = sicherheit_D >= sicherheit_min_D
