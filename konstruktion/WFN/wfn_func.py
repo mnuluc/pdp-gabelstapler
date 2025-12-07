@@ -2,9 +2,8 @@ import math
 
 ### Funktionen für dynamischen Wellenfestigkeitsnachweis
 
-
-## sicherheit
-def sicherheit(sig_zda, sig_zdak, sig_ba, sig_bak, tau_ta, tau_tak):
+## Sicherheit Dauerfestigkeit
+def sicherheit_D(sig_zda, sig_zdak, sig_ba, sig_bak, tau_ta, tau_tak):
     zdb = sig_zda / sig_zdak + sig_ba / sig_bak
     t = tau_ta / tau_tak
     return 1 / math.sqrt(zdb**2 + t**2)
@@ -108,6 +107,18 @@ def k_fs(r_z, r_m, k_t):
 def k_ft(k_fs):
     return 0.575 * k_fs + 0.425
 
+def k_2f(vollwelle, harte_randschicht):
+    if harte_randschicht:
+        if vollwelle:
+            return [1 , 1.1, 1.1]
+        else:
+            return [1, 1, 1]
+    else:
+        if vollwelle:
+            return [1, 1.2, 1.2]
+        else:
+            return [1, 1.1, 1]
+
 # Kerbwirkungszahlen
 #   Konstanten für Formzahl
 a_zd = 0.62
@@ -124,6 +135,13 @@ a_t = 3.4
 b_t = 19
 c_t = 1
 z_t = 2
+
+gamma_f_zdb = [
+    1,
+    1.05,
+    1.1,
+    1.15
+]
 
 def alp_k(a, b, c, z, d_k, d_g, r):
     t = (d_g-d_k)/2
@@ -154,3 +172,52 @@ def bet_k(d_k, d_g, r, r_m):
     alp_k_t = alp_k(a_t, b_t, c_t, z_t, d_k, d_g, r)
 
     return (alp_k_zd/n_hat_zd, alp_k_b/n_hat_b, alp_k_t/n_hat_t)
+
+def gamma_f(bet_k):
+    gamma_f = [None, None, 1]
+    # zd
+    if bet_k[0] < 1.5 : gamma_f[0] = gamma_f_zdb[0]
+    if bet_k[0] >= 1.5 and bet_k[0] < 2: gamma_f[0] = gamma_f_zdb[1]
+    if bet_k[0] >= 2 and bet_k[0] < 3: gamma_f[0] = gamma_f_zdb[2]
+    else: gamma_f[0] = gamma_f_zdb[3]
+    # b
+    if bet_k[1] < 1.5 : gamma_f[1] = gamma_f_zdb[0]
+    if bet_k[1] >= 1.5 and bet_k[1] < 2: gamma_f[1] = gamma_f_zdb[1]
+    if bet_k[1] >= 2 and bet_k[1] < 3: gamma_f[1] = gamma_f_zdb[2]
+    else: gamma_f[1] = gamma_f_zdb[3]
+
+    return gamma_f # tupel enthält: [gamma_f (für zd), gamma_f (für b), gamma_f (für t)]
+
+### Funktionen für den statischen Wellenfestigkeitsnachweis
+#   Maximal
+def sig_zdmax(f_zdmax, d):
+    a = math.pi/4 * d * d
+    return f_zdmax/a
+
+def sig_bmax(m_bmax, d):
+    wb = math.pi/32 * d * d * d
+    return m_bmax/wb
+
+def tau_tmax(m_tmax, d):
+    wt = math.pi/16 * d * d * d
+    return m_tmax/wt
+
+#   Fließgrenzen Bauteil Kerbe
+def sig_zdfk(r_e, bet_k, k_Fzd, k_t):
+    gamma_fzd = gamma_f(bet_k)[0]
+    return k_t * k_Fzd * gamma_fzd * r_e
+
+def sig_bfk(r_e, bet_k, k_Fb, k_t):
+    gamma_fb = gamma_f(bet_k)[1]
+    return k_t * k_Fb * gamma_fb * r_e
+
+def tau_tfk(r_e, bet_k, k_Ft, k_t):
+    gamma_fb = gamma_f(bet_k)[2]
+    return k_t * k_Ft * gamma_fb * r_e
+
+
+## Sicherheit Fließen
+def sicherheit_F(sig_zda, sig_zdfk, sig_ba, sig_bfk, tau_ta, tau_tfk):
+    sig_zdb = sig_zda / sig_zdfk + sig_ba / sig_bfk
+    t = tau_ta / tau_tfk
+    return 1 / math.sqrt(sig_zdb ** 2 + t ** 2)
